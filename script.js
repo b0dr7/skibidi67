@@ -10,12 +10,13 @@
     };
     let currentThemeIndex = 0;
 
-    function getStoredTheme() {
-        try {
-            return localStorage.getItem('killyware-theme') || 'dark';
-        } catch (e) {
-            return 'dark';
+    function getInitialTheme() {
+        const stored = localStorage.getItem('killyware-theme');
+        if (stored && themes.includes(stored)) {
+            return stored;
         }
+        // Default to device preference
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     }
 
     function setTheme(theme) {
@@ -40,38 +41,14 @@
         setTheme(themes[currentThemeIndex]);
     }
 
-    // Initialize theme
-    const storedTheme = getStoredTheme();
-    setTheme(storedTheme);
+    // Initialize theme based on device preference or stored value
+    setTheme(getInitialTheme());
 
     // Theme toggle button
     const themeToggle = document.getElementById('themeToggle');
     if (themeToggle) {
         themeToggle.addEventListener('click', cycleTheme);
     }
-
-    // Navigation scroll effect
-    const navbar = document.getElementById('navbar');
-    let lastScroll = 0;
-    let ticking = false;
-
-    function updateNav() {
-        const currentScroll = window.pageYOffset;
-        if (currentScroll > 30) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
-        lastScroll = currentScroll;
-        ticking = false;
-    }
-
-    window.addEventListener('scroll', () => {
-        if (!ticking) {
-            requestAnimationFrame(updateNav);
-            ticking = true;
-        }
-    });
 
     // Mobile nav toggle
     const navToggle = document.getElementById('navToggle');
@@ -95,14 +72,19 @@
             const item = button.parentElement;
             const isActive = item.classList.contains('active');
 
+            // Close all
             document.querySelectorAll('.faq-item').forEach(i => {
                 i.classList.remove('active');
                 i.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+                i.querySelector('.faq-answer').style.maxHeight = null;
             });
 
+            // Open clicked if it wasn't active
             if (!isActive) {
                 item.classList.add('active');
                 button.setAttribute('aria-expanded', 'true');
+                const answer = item.querySelector('.faq-answer');
+                answer.style.maxHeight = answer.scrollHeight + "px";
             }
         });
     });
@@ -114,12 +96,6 @@
         el.classList.add('reveal');
     });
 
-    const featuresGrid = document.querySelector('.features-grid');
-    if (featuresGrid) featuresGrid.classList.add('stagger-children');
-
-    const faqContainer = document.querySelector('.faq-container');
-    if (faqContainer) faqContainer.classList.add('stagger-children');
-
     const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -129,10 +105,10 @@
         });
     }, {
         threshold: 0.1,
-        rootMargin: '0px 0px -40px 0px'
+        rootMargin: '0px 0px -30px 0px'
     });
 
-    document.querySelectorAll('.reveal, .stagger-children').forEach(el => {
+    document.querySelectorAll('.reveal').forEach(el => {
         revealObserver.observe(el);
     });
 
@@ -144,7 +120,7 @@
             e.preventDefault();
             const target = document.querySelector(href);
             if (target) {
-                const offset = 80;
+                const offset = 80; // Account for sticky header
                 const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
                 window.scrollTo({
                     top: targetPosition,
@@ -153,17 +129,6 @@
             }
         });
     });
-
-    // Parallax effect on hero logo (subtle)
-    const heroLogo = document.querySelector('.hero-logo');
-    if (heroLogo && window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            if (scrolled < window.innerHeight) {
-                heroLogo.style.transform = `translateY(${scrolled * 0.15}px)`;
-            }
-        }, { passive: true });
-    }
 
     // Keyboard navigation for theme toggle
     if (themeToggle) {
