@@ -15,7 +15,6 @@
         if (stored && themes.includes(stored)) {
             return stored;
         }
-        // Default to device preference
         return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     }
 
@@ -41,7 +40,7 @@
         setTheme(themes[currentThemeIndex]);
     }
 
-    // Initialize theme based on device preference or stored value
+    // Initialize theme
     setTheme(getInitialTheme());
 
     // Theme toggle button
@@ -50,46 +49,30 @@
         themeToggle.addEventListener('click', cycleTheme);
     }
 
-    // Mobile nav toggle
-    const navToggle = document.getElementById('navToggle');
-    const navLinks = document.getElementById('navLinks');
-
-    if (navToggle && navLinks) {
-        navToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('open');
-        });
-
-        navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('open');
-            });
-        });
-    }
-
-    // FAQ Accordion
+    // FAQ Accordion - FIXED
     document.querySelectorAll('.faq-question').forEach(button => {
         button.addEventListener('click', () => {
-            const item = button.parentElement;
+            const item = button.closest('.faq-item');
+            const answer = item.querySelector('.faq-answer');
             const isActive = item.classList.contains('active');
 
-            // Close all
-            document.querySelectorAll('.faq-item').forEach(i => {
-                i.classList.remove('active');
-                i.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
-                i.querySelector('.faq-answer').style.maxHeight = null;
+            // Close all FAQ items
+            document.querySelectorAll('.faq-item').forEach(faqItem => {
+                faqItem.classList.remove('active');
+                faqItem.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+                faqItem.querySelector('.faq-answer').style.maxHeight = null;
             });
 
-            // Open clicked if it wasn't active
+            // Open clicked item if it wasn't active
             if (!isActive) {
                 item.classList.add('active');
                 button.setAttribute('aria-expanded', 'true');
-                const answer = item.querySelector('.faq-answer');
                 answer.style.maxHeight = answer.scrollHeight + "px";
             }
         });
     });
 
-    // Scroll reveal with IntersectionObserver
+    // Scroll reveal
     const revealElements = document.querySelectorAll('.feature-card, .faq-item, .section-header, .cta-card');
 
     revealElements.forEach(el => {
@@ -120,7 +103,7 @@
             e.preventDefault();
             const target = document.querySelector(href);
             if (target) {
-                const offset = 80; // Account for sticky header
+                const offset = 70;
                 const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
                 window.scrollTo({
                     top: targetPosition,
