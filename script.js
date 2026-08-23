@@ -49,7 +49,7 @@
         themeToggle.addEventListener('click', cycleTheme);
     }
 
-    // FAQ Accordion - FIXED
+    // FAQ Accordion
     document.querySelectorAll('.faq-question').forEach(button => {
         button.addEventListener('click', () => {
             const item = button.closest('.faq-item');
