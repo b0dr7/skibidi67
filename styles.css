@@ -104,12 +104,6 @@ body {
     font-weight: 700;
 }
 
-.header-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
 .theme-toggle {
     background: transparent;
     border: 1px solid var(--border);
@@ -123,6 +117,7 @@ body {
     cursor: pointer;
     transition: all var(--transition);
     position: relative;
+    flex-shrink: 0;
 }
 
 .theme-toggle:hover {
@@ -143,36 +138,6 @@ body {
 .theme-icon.active {
     opacity: 1;
     transform: scale(1);
-}
-
-.nav-discord {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--accent);
-    color: #ffffff;
-    padding: 8px 14px;
-    border-radius: var(--radius-md);
-    font-weight: 600;
-    font-size: 14px;
-    text-decoration: none;
-    transition: all var(--transition);
-    border: none;
-    cursor: pointer;
-}
-
-.nav-discord:hover {
-    background: var(--accent-hover);
-    transform: translateY(-1px);
-}
-
-.nav-discord svg {
-    width: 16px;
-    height: 16px;
-}
-
-.discord-text {
-    display: inline;
 }
 
 /* Main Layout */
@@ -217,13 +182,6 @@ main {
     line-height: 1.1;
 }
 
-.hero p {
-    font-size: 16px;
-    color: var(--text-secondary);
-    margin-bottom: 20px;
-    line-height: 1.6;
-}
-
 .hero-badge {
     display: inline-flex;
     align-items: center;
@@ -235,7 +193,7 @@ main {
     font-size: 14px;
     font-weight: 600;
     color: var(--accent);
-    margin-bottom: 24px;
+    margin-bottom: 20px;
 }
 
 .hero-badge .dot {
@@ -243,6 +201,13 @@ main {
     height: 6px;
     background: #22c55e;
     border-radius: 50%;
+}
+
+.hero p {
+    font-size: 16px;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+    line-height: 1.6;
 }
 
 .hero-cta {
@@ -514,19 +479,6 @@ footer {
 
     .nav-brand-text {
         font-size: 15px;
-    }
-
-    .discord-text {
-        display: none;
-    }
-
-    .nav-discord {
-        padding: 8px 12px;
-    }
-
-    .nav-discord svg {
-        width: 18px;
-        height: 18px;
     }
 
     .hero {
